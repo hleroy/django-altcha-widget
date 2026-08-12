@@ -1,0 +1,47 @@
+version: 2
+
+updates:
+  # The ALTCHA widget assets are vendored under
+  # src/django_altcha_widget/static/django_altcha_widget/altcha/, but the version
+  # is pinned in package.json so that upgrades are proposed here. After merging
+  # such an update, re-vendor the assets with:
+  #     just sync-altcha
+  # CI fails until the vendored files match the pinned version.
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore(deps)"
+    labels:
+      - "dependencies"
+
+  # `uv`, not `pip`: this project has a uv.lock, and only the uv ecosystem
+  # keeps it in step with pyproject.toml.
+  #
+  # `widen` only touches a requirement when the new version falls outside it,
+  # so the open `Django>=6.0` floor is left alone. Set explicitly: the default
+  # is inferred from whether the package is published to PyPI, which changes
+  # the behaviour under us at first release.
+  #
+  # Dependabot will not add a Django matrix cell for you. When it proposes a
+  # new major or minor Django, add the matching `djangoXY` dependency group and
+  # matrix entry by hand.
+  - package-ecosystem: "uv"
+    directory: "/"
+    versioning-strategy: widen
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore(deps)"
+    labels:
+      - "dependencies"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore(ci)"
+    labels:
+      - "dependencies"

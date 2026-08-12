@@ -1,0 +1,18 @@
+{
+  "name": "altcha",
+  "license": "MIT",
+  "homepage": "https://altcha.org",
+  "repository": "https://github.com/altcha-org/altcha",
+  "vendored": {
+    "LICENSE.txt": "LICENSE.txt",
+    "external/altcha.min.js": "dist/external/altcha.min.js",
+    "external/altcha.css": "dist/external/altcha.css",
+    "workers/": "dist/workers/",
+    "i18n/": "dist/i18n/ (regional bundles excluded)"
+  },
+  "notes": "Only the modular build is vendored; django-altcha-widget serves it under a strict Content-Security-Policy. Run `just sync-altcha` to re-vendor; see scripts/sync_altcha.py.",
+  "version": "3.2.1",
+  "copyright": "Copyright (c) 2023-2026 Daniel Regeci, BAU Software s.r.o.",
+  "source": "https://github.com/altcha-org/altcha/archive/refs/tags/v3.2.1.tar.gz",
+  "purl": "pkg:npm/altcha@3.2.1"
+}

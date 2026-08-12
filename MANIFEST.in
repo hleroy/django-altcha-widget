@@ -1,0 +1,21 @@
+recursive-include scripts *.py
+
+# The suite has to be runnable from the sdist, which is what a distribution
+# packager builds from. setuptools picks up `tests/test*.py` on its own, but not
+# the package marker, the settings module or the URLconf — without which
+# collection fails outright. The pytest configuration naming them lives in
+# pyproject.toml, which the sdist carries unconditionally.
+recursive-include tests *.py
+
+# The ALTCHA version pin and the script that turns it into vendored assets, so
+# the tree can be re-vendored from the sdist.
+include package.json
+
+include LICENSE
+include justfile
+include *.toml
+# README.md arrives on its own as the `readme` named in pyproject.toml; the
+# changelog has no such hook and needs naming here.
+include CHANGELOG.md
+
+global-exclude *.py[co] __pycache__ *.*~

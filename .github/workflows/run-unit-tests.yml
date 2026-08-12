@@ -1,0 +1,76 @@
+name: Run unit tests
+
+on:
+  # Called by pypi-release.yml, so a tag is tested before it is published
+  # against the same matrix a pull request is.
+  workflow_call:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+
+env:
+  # Pinned, so an uv release is something bumped here rather than something CI
+  # silently starts building with.
+  UV_VERSION: "0.12.3"
+  # Fail rather than silently re-resolve if uv.lock is stale against
+  # pyproject.toml, so a dependency change cannot reach main unlocked.
+  UV_LOCKED: "1"
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+
+    strategy:
+      # Report every failing cell rather than cancelling the rest on the first
+      # one: a Django-specific and a Python-specific failure look identical
+      # when only one cell is allowed to finish.
+      fail-fast: false
+      max-parallel: 6
+      matrix:
+        python-version: [ "3.12", "3.13", "3.14" ]
+        # Each entry needs a matching `djangoXY` dependency group in
+        # pyproject.toml. Explicit, so a new Django release is something added
+        # in both places rather than something CI silently starts testing
+        # against. Both ends of the supported range are exercised, so the
+        # declared floor stays honest.
+        django-version: [ "6.0", "6.1" ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
+        with:
+          persist-credentials: false  # do not keep the token around
+
+      # uv provides the matrix interpreter, so actions/setup-python is not
+      # needed. `python-version` only pre-installs and caches it here; the
+      # version the virtualenv is built against comes from PYTHON_VERSION
+      # below.
+      - name: Set up uv
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9  # v9.0.0
+        with:
+          version: ${{ env.UV_VERSION }}
+          python-version: ${{ matrix.python-version }}
+          enable-cache: true
+
+      - name: Install just
+        run: |
+          uv tool install rust-just
+          uv tool dir --bin >> "$GITHUB_PATH"
+
+      - name: Install dependencies
+        run: just pin-django ${{ matrix.django-version }}
+        env:
+          PYTHON_VERSION: ${{ matrix.python-version }}
+
+      - name: Validate code format
+        run: just check
+
+      - name: Check the vendored ALTCHA assets match package.json
+        run: just check-altcha
+
+      - name: Run tests
+        run: just test

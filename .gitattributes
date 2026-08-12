@@ -1,0 +1,5 @@
+# Never convert line endings, in either direction. The vendored ALTCHA assets
+# are verified byte-for-byte against the SHA-256 sums in CHECKSUMS, so a
+# checkout with core.autocrlf=true — the Git for Windows default — would fail
+# `just check-altcha` wholesale and build a wheel of altered bytes.
+* -text

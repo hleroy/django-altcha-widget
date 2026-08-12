@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="{{ css_altcha_url }}">
+{# Module scripts are deferred and evaluated in document order: the worker    #}
+{# registration below always runs after the widget module is loaded. Neither  #}
+{# may be `async`, which would drop that ordering guarantee.                  #}
+<script src="{{ js_altcha_url }}" type="module"></script>
+{% if js_translations_url %}<script src="{{ js_translations_url }}" type="module"></script>{% endif %}
+<script src="{{ js_workers_register_url }}" type="module"{% for key, value in workers_attrs.items %} {{ key }}="{{ value }}"{% endfor %}></script>
+{# No hidden <input> of our own here. `<altcha-widget>` renders one under this #}
+{# same name, in the light DOM, and two controls sharing a name are resolved   #}
+{# only by document order.                                                     #}
+<altcha-widget name="{{ widget.name }}"
+    {% for key, value in widget.altcha_options.items %}
+        {# Booleans follow the HTML convention rather than being stringified: #}
+        {# present means true, absent means false. `key="False"` would be a   #}
+        {# non-empty, and so truthy, attribute value.                         #}
+        {% if value is True %} {{ key }}
+        {% elif value is not False and value is not None %} {{ key }}="{{ value }}"
+        {% endif %}
+    {% endfor %}
+></altcha-widget>

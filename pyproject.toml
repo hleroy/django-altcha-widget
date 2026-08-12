@@ -1,0 +1,143 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "django-altcha-widget"
+version = "0.1.0"
+description = "Django form field and widget for the ALTCHA proof-of-work CAPTCHA."
+readme = "README.md"
+license = "MIT"
+license-files = [
+    "LICENSE",
+    # MIT requires the notice to travel with the code redistributed here, and
+    # the vendored ALTCHA assets are exactly that.
+    "src/django_altcha_widget/static/django_altcha_widget/altcha/LICENSE.txt",
+]
+authors = [
+  { name = "Hervé Le Roy", email = "hleroy@hleroy.com" }
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Web Environment",
+    "Framework :: Django",
+    "Framework :: Django :: 6.0",
+    "Framework :: Django :: 6.1",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+requires-python = ">=3.12"
+dependencies = [
+    "Django>=6.0",
+    "altcha>=2.1.0,<3.0.0",  # server-side challenge creation and verification
+]
+keywords = ["captcha", "django", "widget", "form", "altcha", "proof-of-work", "privacy"]
+
+[project.optional-dependencies]
+# Required to generate and verify ARGON2ID challenges.
+argon2 = [
+    "argon2-cffi",
+]
+
+# One group per cell of the Django test matrix. Unlike an extra, a dependency
+# group is not published in the wheel metadata, so this tooling stays out of
+# what users of the package see.
+[dependency-groups]
+test-base = [
+    # Pinned: Ruff changes formatter output and lint defaults across minor
+    # releases, which otherwise turns CI red on an unrelated commit.
+    "ruff==0.16.2",
+    "pytest-django",
+    "pytest-cov",
+    "pre-commit",  # optional hooks; see .pre-commit-config.yaml
+    "argon2-cffi",  # exercises the ARGON2ID algorithm
+]
+django60 = [
+    { include-group = "test-base" },
+    "Django>=6.0,<6.1",
+]
+django61 = [
+    { include-group = "test-base" },
+    "Django>=6.1,<6.2",
+]
+
+[tool.uv]
+# Declaring the groups as mutually exclusive is what lets a single uv.lock hold
+# an independent resolution per Django version, rather than uv trying — and
+# failing — to resolve every group together. `uv sync --group django60` then
+# picks one. Both cells must stay inside the `Django>=6.0` floor declared above;
+# nothing enforces that automatically.
+conflicts = [
+    [
+        { group = "django60" },
+        { group = "django61" },
+    ],
+]
+
+[project.urls]
+Homepage = "https://github.com/hleroy/django-altcha-widget"
+Repository = "https://github.com/hleroy/django-altcha-widget.git"
+Issues = "https://github.com/hleroy/django-altcha-widget/issues"
+Changelog = "https://github.com/hleroy/django-altcha-widget/blob/main/CHANGELOG.md"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+# src layout: the package is not importable from the repository root, so tests
+# and tools resolve it through the installed distribution rather than by
+# happening to run in the right working directory.
+where = ["src"]
+include = ["django_altcha_widget"]
+
+[tool.setuptools.package-data]
+django_altcha_widget = ["static/**", "templates/**"]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "tests.settings"
+# src layout: the package resolves through the editable install, but `tests` is
+# a plain directory, so the repository root has to be on the path for the suite
+# to import itself.
+pythonpath = ["."]
+
+[tool.coverage.run]
+# Naming the importable package rather than a path is what keeps scripts/ and
+# tests/ out of the measurement without an omit list: coverage resolves it
+# through the same editable install the suite imports, so the report covers the
+# code that ships and nothing else.
+source = ["django_altcha_widget"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+
+[tool.ruff.lint]
+# Rules: https://docs.astral.sh/ruff/rules/
+select = [
+    "E",  # pycodestyle
+    "W",  # pycodestyle warnings
+    "F",  # Pyflakes
+    "UP", # pyupgrade
+    "S",  # flake8-bandit
+    "I",  # isort
+    "C9", # McCabe complexity
+]
+
+[tool.ruff.lint.isort]
+force-single-line = true
+sections = { django = ["django"] }
+section-order = [
+    "future",
+    "standard-library",
+    "django",
+    "third-party",
+    "first-party",
+    "local-folder",
+]

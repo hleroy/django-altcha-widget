@@ -1,0 +1,36 @@
+# Keep this file narrow and anchored. Ruff honours .gitignore and skips ignored
+# files silently, so a stray broad pattern does not just hide build output — it
+# takes real source out of `just check` without saying so.
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Packaging and build output
+/dist/
+/build/
+*.egg-info/
+
+# Environments
+/.venv/
+/.python-version
+
+# Tool caches
+/.pytest_cache/
+/.ruff_cache/
+
+# Coverage
+.coverage
+.coverage.*
+/htmlcov/
+
+# npm. package.json only pins the ALTCHA version for Dependabot; the assets are
+# vendored by scripts/sync_altcha.py, which fetches them itself.
+/node_modules/
+
+# Editors and OS
+/.idea/
+/.vscode/
+.DS_Store
+*~
+.*.sw[po]
