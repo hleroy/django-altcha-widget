@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "django-altcha-widget"
-version = "0.1.0"
+version = "1.0.0"
 description = "Django form field and widget for the ALTCHA proof-of-work CAPTCHA."
 readme = "README.md"
 license = "MIT"
@@ -18,7 +18,7 @@ authors = [
   { name = "Hervé Le Roy", email = "hleroy@hleroy.com" }
 ]
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "Environment :: Web Environment",
     "Framework :: Django",
     "Framework :: Django :: 6.0",
