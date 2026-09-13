@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v0.1.0 (unreleased)
+## v1.0.0 (2026-09-13)
 
 First version of `django-altcha-widget`, a Django form field and widget for
 the ALTCHA proof-of-work CAPTCHA.
@@ -19,6 +19,7 @@ strict Content Security Policy (no `unsafe-inline` styles, no `blob:` workers).
 
 Requires Python 3.12 or later and Django 6.0 or later.
 
-This is a pre-1.0 version, published from the Git repository only and not on
-PyPI, for testing in a real project. The public API — the field, the widget
-options and the `ALTCHA_*` settings — may still change before v1.0.0.
+This is the first release published on PyPI, cut after the package had run in
+production. The public API — the field, the widget options and the `ALTCHA_*`
+settings — is now covered by [Semantic Versioning](https://semver.org/spec/v2.0.0.html):
+a breaking change to any of it means a new major version.

@@ -1,12 +1,10 @@
 # django-altcha-widget
 
-> [!WARNING]
-> ### 🚧 Beta — v0.1.0 🚧
->
-> This is a **pre-1.0 version**, published from the Git repository only and
-> **not on PyPI**, while it is tested in a real project. The public API — the
-> field, the widget options and the `ALTCHA_*` settings — may still change
-> before v1.0.0. ⚠️ Pin a commit if you depend on it.
+[![PyPI](https://img.shields.io/pypi/v/django-altcha-widget.svg)](https://pypi.org/project/django-altcha-widget/)
+[![Python versions](https://img.shields.io/pypi/pyversions/django-altcha-widget.svg)](https://pypi.org/project/django-altcha-widget/)
+[![Django versions](https://img.shields.io/pypi/frameworkversions/django/django-altcha-widget.svg)](https://pypi.org/project/django-altcha-widget/)
+[![Tests](https://github.com/hleroy/django-altcha-widget/actions/workflows/run-unit-tests.yml/badge.svg)](https://github.com/hleroy/django-altcha-widget/actions/workflows/run-unit-tests.yml)
+[![License](https://img.shields.io/pypi/l/django-altcha-widget.svg)](https://github.com/hleroy/django-altcha-widget/blob/main/LICENSE)
 
 A Django form field and widget for [ALTCHA](https://altcha.org), the
 privacy-friendly proof-of-work CAPTCHA.
@@ -38,13 +36,8 @@ Requires **Python 3.12+** and **Django 6.0+**.
 1. **Install the package:**
 
    ```bash
-   pip install git+https://github.com/hleroy/django-altcha-widget.git
+   pip install django-altcha-widget
    ```
-
-   > [!NOTE]
-   > Pre-1.0 versions are published from the Git repository only. From v1.0.0
-   > the package will be on PyPI, installable with
-   > `pip install django-altcha-widget`.
 
 2. **Add to `INSTALLED_APPS`** in your project's `settings.py`:
 
